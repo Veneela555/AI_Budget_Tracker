@@ -39,16 +39,20 @@ export default async function DashboardPage() {
 
       {/* Accounts Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        
+        {/* Add New Account Card (Green Theme Applied) */}
         <CreateAccountDrawer>
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-dashed">
-            <CardContent className="flex flex-col items-center justify-center text-muted-foreground h-full pt-5">
+          <Card className="cursor-pointer border-dashed bg-[#03A062] text-white hover:bg-[#028a55] transition-all hover:shadow-lg">
+            <CardContent className="flex flex-col items-center justify-center h-full pt-5">
               <Plus className="h-10 w-10 mb-2" />
               <p className="text-sm font-medium">Add New Account</p>
             </CardContent>
           </Card>
         </CreateAccountDrawer>
+
+        {/* Existing Accounts */}
         {accounts.length > 0 &&
-          accounts?.map((account) => (
+          accounts.map((account) => (
             <AccountCard key={account.id} account={account} />
           ))}
       </div>

@@ -39,12 +39,10 @@ export function AccountChart({ transactions }) {
       ? startOfDay(subDays(now, range.days))
       : startOfDay(new Date(0));
 
-    // Filter transactions within date range
     const filtered = transactions.filter(
       (t) => new Date(t.date) >= startDate && new Date(t.date) <= endOfDay(now)
     );
 
-    // Group transactions by date
     const grouped = filtered.reduce((acc, transaction) => {
       const date = format(new Date(transaction.date), "MMM dd");
       if (!acc[date]) {
@@ -58,13 +56,12 @@ export function AccountChart({ transactions }) {
       return acc;
     }, {});
 
-    // Convert to array and sort by date
     return Object.values(grouped).sort(
       (a, b) => new Date(a.date) - new Date(b.date)
     );
   }, [transactions, dateRange]);
 
-  // Calculate totals for the selected period
+  // Totals
   const totals = useMemo(() => {
     return filteredData.reduce(
       (acc, day) => ({
@@ -74,6 +71,14 @@ export function AccountChart({ transactions }) {
       { income: 0, expense: 0 }
     );
   }, [filteredData]);
+
+  const totalAmount = totals.income + totals.expense;
+
+  const incomePercent =
+    totalAmount > 0 ? (totals.income / totalAmount) * 100 : 0;
+
+  const expensePercent =
+    totalAmount > 0 ? (totals.expense / totalAmount) * 100 : 0;
 
   return (
     <Card>
@@ -94,20 +99,30 @@ export function AccountChart({ transactions }) {
           </SelectContent>
         </Select>
       </CardHeader>
+
       <CardContent>
+        {/* Summary with % */}
         <div className="flex justify-around mb-6 text-sm">
           <div className="text-center">
             <p className="text-muted-foreground">Total Income</p>
             <p className="text-lg font-bold text-green-500">
               ${totals.income.toFixed(2)}
             </p>
+            <p className="text-xs text-muted-foreground">
+              {incomePercent.toFixed(1)}%
+            </p>
           </div>
+
           <div className="text-center">
             <p className="text-muted-foreground">Total Expenses</p>
             <p className="text-lg font-bold text-red-500">
               ${totals.expense.toFixed(2)}
             </p>
+            <p className="text-xs text-muted-foreground">
+              {expensePercent.toFixed(1)}%
+            </p>
           </div>
+
           <div className="text-center">
             <p className="text-muted-foreground">Net</p>
             <p
@@ -121,40 +136,49 @@ export function AccountChart({ transactions }) {
             </p>
           </div>
         </div>
+
+        {/* Chart */}
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={filteredData}
-              margin={{ top: 10, right: 10, left: 10, bottom: 0 }}
-            >
+            <BarChart data={filteredData}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
+
               <XAxis
                 dataKey="date"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
               />
+
               <YAxis
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value}`}
               />
+
               <Tooltip
-                formatter={(value) => [`$${value}`, undefined]}
+                formatter={(value, name) => {
+                  const percent =
+                    totalAmount > 0 ? ((value / totalAmount) * 100).toFixed(1) : 0;
+                  return [`$${value} (${percent}%)`, name];
+                }}
                 contentStyle={{
                   backgroundColor: "hsl(var(--popover))",
                   border: "1px solid hsl(var(--border))",
                   borderRadius: "var(--radius)",
                 }}
               />
+
               <Legend />
+
               <Bar
                 dataKey="income"
                 name="Income"
                 fill="#22c55e"
                 radius={[4, 4, 0, 0]}
               />
+
               <Bar
                 dataKey="expense"
                 name="Expense"

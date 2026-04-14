@@ -113,7 +113,7 @@ export function AddTransactionForm({
       toast.success(
         editMode
           ? "Transaction updated successfully"
-          : "Transaction created successfully"
+          : "Transaction created successfully",
       );
       reset();
       router.push(`/account/${transactionResult.data.accountId}`);
@@ -125,7 +125,7 @@ export function AddTransactionForm({
   const date = watch("date");
 
   const filteredCategories = categories.filter(
-    (category) => category.type === type
+    (category) => category.type === type,
   );
 
   return (
@@ -231,7 +231,7 @@ export function AddTransactionForm({
               variant="outline"
               className={cn(
                 "w-full pl-3 text-left font-normal",
-                !date && "text-muted-foreground"
+                !date && "text-muted-foreground",
               )}
             >
               {date ? format(date, "PPP") : <span>Pick a date</span>}
@@ -306,15 +306,21 @@ export function AddTransactionForm({
 
       {/* Actions */}
       <div className="flex gap-4">
+        {/* Cancel Button */}
         <Button
           type="button"
-          variant="outline"
-          className="w-full"
+          className="w-full bg-white text-black border border-gray-300 hover:bg-gray-100"
           onClick={() => router.back()}
         >
           Cancel
         </Button>
-        <Button type="submit" className="w-full" disabled={transactionLoading}>
+
+        {/* Submit Button */}
+        <Button
+          type="submit"
+          className="w-full bg-[#03A062] hover:bg-[#028a55] text-white"
+          disabled={transactionLoading}
+        >
           {transactionLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />

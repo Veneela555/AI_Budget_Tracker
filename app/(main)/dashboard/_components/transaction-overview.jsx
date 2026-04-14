@@ -76,6 +76,12 @@ export function DashboardOverview({ accounts, transactions }) {
     })
   );
 
+  // ✅ Total for percentage calculation
+  const totalExpenses = pieChartData.reduce(
+    (sum, item) => sum + item.value,
+    0
+  );
+
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {/* Recent Transactions Card */}
@@ -167,7 +173,16 @@ export function DashboardOverview({ accounts, transactions }) {
                     outerRadius={80}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, value }) => `${name}: $${value.toFixed(2)}`}
+                    // ✅ Label with percentage
+                    label={({ name, value }) => {
+                      const percent = (
+                        (value / totalExpenses) *
+                        100
+                      ).toFixed(1);
+                      return `${name}: $${value.toFixed(
+                        2
+                      )} (${percent}%)`;
+                    }}
                   >
                     {pieChartData.map((entry, index) => (
                       <Cell
@@ -176,14 +191,23 @@ export function DashboardOverview({ accounts, transactions }) {
                       />
                     ))}
                   </Pie>
+
+                  {/* ✅ Tooltip with percentage */}
                   <Tooltip
-                    formatter={(value) => `$${value.toFixed(2)}`}
+                    formatter={(value) => {
+                      const percent = (
+                        (value / totalExpenses) *
+                        100
+                      ).toFixed(1);
+                      return [`$${value.toFixed(2)} (${percent}%)`, "Amount"];
+                    }}
                     contentStyle={{
                       backgroundColor: "hsl(var(--popover))",
                       border: "1px solid hsl(var(--border))",
                       borderRadius: "var(--radius)",
                     }}
                   />
+
                   <Legend />
                 </PieChart>
               </ResponsiveContainer>

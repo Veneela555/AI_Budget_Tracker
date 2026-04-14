@@ -8,6 +8,27 @@ export const defaultCategories = [
     icon: "Wallet",
   },
   {
+    id: "training",
+    name: "Training",
+    type: "INCOME",
+    color: "#0625d4", // cyan-500
+    icon: "Laptop",
+  },
+  {
+    id: "bootcamp",
+    name: "Bootcamp",
+    type: "INCOME",
+    color: "#8f06d4", // cyan-500
+    icon: "Laptop",
+  },
+  {
+    id: "marketing",
+    name: "Marketing",
+    type: "INCOME",
+    color: "#d406b2", // cyan-500
+    icon: "Laptop",
+  },
+  {
     id: "freelance",
     name: "Freelance",
     type: "INCOME",
@@ -44,6 +65,7 @@ export const defaultCategories = [
   },
 
   // Expense Categories
+
   {
     id: "housing",
     name: "Housing",
